@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello_world"></string>
+    <string name="app_name">Сподели с мен</string>
+    <string name="title_activity_lobby">Лоби</string>
+    <string name="send_request_label">Направи запитване</string>
+    <string name="join_the_team_label">Присъедини се към екипа</string>
+    <string name="about_label">За нас</string>
+    <string name="exit_label">Изход</string>
+    
+</resources>
