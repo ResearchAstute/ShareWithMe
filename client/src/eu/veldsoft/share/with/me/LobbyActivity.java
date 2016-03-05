@@ -27,14 +27,14 @@ public class LobbyActivity extends Activity {
 		}
 
 		SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
-		String stored = preference.getString(Util.INSTNCE_HASH_CODE_KEY, "");
+		String stored = preference.getString(Util.SHARED_PREFERENCE_INSTNCE_HASH_CODE_KEY, "");
 
 		/*
 		 * Write only once in the first start of the application.
 		 */
 		if (stored.equals("") == true) {
 			SharedPreferences.Editor editor = preference.edit();
-			editor.putString(Util.INSTNCE_HASH_CODE_KEY, hash);
+			editor.putString(Util.SHARED_PREFERENCE_INSTNCE_HASH_CODE_KEY, hash);
 			editor.commit();
 		}
 	}

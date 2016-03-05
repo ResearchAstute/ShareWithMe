@@ -31,10 +31,16 @@
         <activity
             android:name=".RequestActivity"
             android:label="@string/title_activity_request" >
+            <meta-data
+                android:name="host"
+                android:value="http://localhost/" />
         </activity>
         <activity
             android:name=".JoinTeamActivity"
             android:label="@string/title_activity_join_team" >
+            <meta-data
+                android:name="host"
+                android:value="http://localhost/" />
         </activity>
     </application>
 
