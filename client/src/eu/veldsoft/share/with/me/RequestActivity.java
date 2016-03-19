@@ -26,15 +26,17 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * 
- * @author
+ * @author Ventsislav Medarov
  */
 public class RequestActivity extends Activity {
 
 	/**
 	 * 
+	 * @author Ventsislav Medarov
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class RequestActivity extends Activity {
 		findViewById(R.id.request_send).setOnClickListener(
 				/**
 				 * 
+				 * @author Ventsislav Medarov
 				 */
 				new View.OnClickListener() {
 					@Override
@@ -57,8 +60,19 @@ public class RequestActivity extends Activity {
 											PackageManager.GET_ACTIVITIES | PackageManager.GET_META_DATA).metaData
 													.getString("host");
 								} catch (NameNotFoundException exception) {
-									// TODO Better exception notification should
-									// be applied.
+									System.err.println(exception);
+									return null;
+								}
+
+								String script = "";
+								try {
+									script = getPackageManager()
+											.getActivityInfo(RequestActivity.this.getComponentName(),
+													PackageManager.GET_ACTIVITIES
+															| PackageManager.GET_META_DATA).metaData
+																	.getString("script");
+								} catch (NameNotFoundException exception) {
+									System.err.println(exception);
 									return null;
 								}
 
@@ -71,7 +85,7 @@ public class RequestActivity extends Activity {
 								String message = ((EditText) findViewById(R.id.request_text)).getText().toString();
 
 								HttpClient client = new DefaultHttpClient();
-								HttpPost post = new HttpPost(host);
+								HttpPost post = new HttpPost("http://" + host + "/" + script);
 
 								JSONObject json = new JSONObject();
 								try {
@@ -79,26 +93,30 @@ public class RequestActivity extends Activity {
 									json.put(Util.JSON_MESSAGE_HASH_CODE_KEY, messageHash);
 									json.put(Util.JSON_MESSAGE_KEY, message);
 								} catch (JSONException exception) {
-									// TODO Do better exception handling.
+									System.err.println(exception);
 								}
-
+								
 								List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 								pairs.add(new BasicNameValuePair("request", json.toString()));
 								try {
 									post.setEntity(new UrlEncodedFormEntity(pairs));
-								} catch (UnsupportedEncodingException e) {
+								} catch (UnsupportedEncodingException exception) {
+									System.err.println(exception);
 								}
 
 								try {
 									HttpResponse response = client.execute(post);
-								} catch (ClientProtocolException excetpion) {
+								} catch (ClientProtocolException exception) {
+									System.err.println(exception);
 								} catch (IOException exception) {
+									System.err.println(exception);
 								}
 
 								return null;
 							}
 						}).execute();
 
+						Toast.makeText(RequestActivity.this, R.string.request_message_send, Toast.LENGTH_SHORT).show();
 						RequestActivity.this.finish();
 					}
 				});

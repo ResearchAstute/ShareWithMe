@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="hello_world"></string>
@@ -17,5 +17,6 @@
     <string name="title_activity_request">Запитване</string>
     <string name="title_activity_join_team">Присъедини се към екипа</string>
     <string name="about_text"></string>
+    <string name="request_message_send">Изпратено</string>
 
 </resources>

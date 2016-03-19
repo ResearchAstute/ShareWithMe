@@ -13,12 +13,13 @@ import android.widget.Button;
 
 /**
  * 
- * @author
+ * @author Ventsislav Medarov
  */
 public class LobbyActivity extends Activity {
 
 	/**
 	 * 
+	 * @author Ventsislav Medarov
 	 */
 	private void registerHash() {
 		String hash = Secure.getString(this.getContentResolver(), Secure.ANDROID_ID);
@@ -41,6 +42,7 @@ public class LobbyActivity extends Activity {
 
 	/**
 	 * 
+	 * @author Ventsislav Medarov
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,7 @@ public class LobbyActivity extends Activity {
 		((Button) findViewById(R.id.about)).setOnClickListener(new View.OnClickListener() {
 			/**
 			 * 
+			 * @author Ventsislav Medarov
 			 */
 			@Override
 			public void onClick(View view) {

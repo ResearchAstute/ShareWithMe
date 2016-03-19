@@ -26,8 +26,18 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.EditText;
 
+/**
+ * 
+ * @author Ventsislav Medarov
+ */
 public class JoinTeamActivity extends Activity {
 
+	/**
+	 * 
+	 * @param savedInstanceState
+	 * 
+	 * @author Ventsislav Medarov
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -38,6 +48,9 @@ public class JoinTeamActivity extends Activity {
 				 * 
 				 */
 				new View.OnClickListener() {
+					/**
+					 * 
+					 */
 					@Override
 					public void onClick(View view) {
 						(new AsyncTask<Void, Void, Void>() {

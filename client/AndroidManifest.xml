@@ -33,15 +33,21 @@
             android:label="@string/title_activity_request" >
             <meta-data
                 android:name="host"
-                android:value="http://localhost/" />
-        </activity>
+                android:value="192.168.0.102" />
+            <meta-data
+                android:name="script"
+                android:value="request.php" />
+            </activity>
         <activity
             android:name=".JoinTeamActivity"
             android:label="@string/title_activity_join_team" >
             <meta-data
                 android:name="host"
-                android:value="http://localhost/" />
-        </activity>
+                android:value="192.168.0.102" />
+            <meta-data
+                android:name="script"
+                android:value="join.php" />
+            </activity>
     </application>
 
 </manifest>
