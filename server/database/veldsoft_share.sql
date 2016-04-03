@@ -23,6 +23,22 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Структура на таблица `consultants`
+--
+
+CREATE TABLE `consultants` (
+  `id` int(8) NOT NULL,
+  `registered` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `instance_hash` char(64) NOT NULL DEFAULT '',
+  `names` varchar(30) NOT NULL DEFAULT '',
+  `email` varchar(25) NOT NULL DEFAULT '',
+  `phone` varchar(25) NOT NULL DEFAULT '',
+  `active` enum('N','Y') NOT NULL DEFAULT 'N'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Структура на таблица `correspondence`
 --
 
@@ -32,7 +48,8 @@ CREATE TABLE `correspondence` (
   `parent_hash` char(64) NOT NULL DEFAULT '',
   `message_hash` char(64) NOT NULL DEFAULT '',
   `instance_hash` char(64) NOT NULL DEFAULT '',
-  `message` text
+  `message` text,
+  `rating` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -51,6 +68,12 @@ CREATE TABLE `servinfo` (
 --
 
 --
+-- Indexes for table `consultants`
+--
+ALTER TABLE `consultants`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `correspondence`
 --
 ALTER TABLE `correspondence`
@@ -61,10 +84,15 @@ ALTER TABLE `correspondence`
 --
 
 --
+-- AUTO_INCREMENT for table `consultants`
+--
+ALTER TABLE `consultants`
+  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+--
 -- AUTO_INCREMENT for table `correspondence`
 --
 ALTER TABLE `correspondence`
-  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

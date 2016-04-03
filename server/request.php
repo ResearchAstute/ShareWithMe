@@ -4,7 +4,6 @@ require 'database.php';
 if(isset($_POST['request'])) {
 	open_my_db();
 
-	$parent_hash = "";
 	$message_hash = "";
 	$instance_hash = "";
 	$message = "";
@@ -25,9 +24,11 @@ if(isset($_POST['request'])) {
 	}
 
 	//TODO Replace SQL with stored procedure call.
-	query_my_db( "INSERT INTO correspondence (parent_hash, message_hash, instance_hash, message) VALUES ('".$parent_hash."', '".$message_hash."', '".$instance_hash."', '".$message."');" );
+	query_my_db( "INSERT INTO correspondence (message_hash, instance_hash, message) VALUES ('".$message_hash."', '".$instance_hash."', '".$message."');" );
 
         close_my_db();
+
+	//TODO Inform all moderators.
 } 
 
 ?>

@@ -18,5 +18,6 @@
     <string name="title_activity_join_team">Присъедини се към екипа</string>
     <string name="about_text"></string>
     <string name="request_message_send">Изпратено</string>
-
+    <string name="join_request_send">Изпратено</string>
+    
 </resources>

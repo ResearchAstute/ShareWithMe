@@ -56,9 +56,8 @@ public class RequestActivity extends Activity {
 							protected Void doInBackground(Void... params) {
 								String host = "";
 								try {
-									host = getPackageManager().getActivityInfo(RequestActivity.this.getComponentName(),
-											PackageManager.GET_ACTIVITIES | PackageManager.GET_META_DATA).metaData
-													.getString("host");
+									host = getPackageManager().getApplicationInfo(RequestActivity.this.getPackageName(),
+											PackageManager.GET_META_DATA).metaData.getString("host");
 								} catch (NameNotFoundException exception) {
 									System.err.println(exception);
 									return null;
@@ -95,7 +94,7 @@ public class RequestActivity extends Activity {
 								} catch (JSONException exception) {
 									System.err.println(exception);
 								}
-								
+
 								List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 								pairs.add(new BasicNameValuePair("request", json.toString()));
 								try {

@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * 
@@ -58,12 +59,23 @@ public class JoinTeamActivity extends Activity {
 							protected Void doInBackground(Void... params) {
 								String host = "";
 								try {
-									host = getPackageManager().getActivityInfo(JoinTeamActivity.this.getComponentName(),
-											PackageManager.GET_ACTIVITIES | PackageManager.GET_META_DATA).metaData
-													.getString("host");
+									host = getPackageManager().getApplicationInfo(
+											JoinTeamActivity.this.getPackageName(),
+											PackageManager.GET_META_DATA).metaData.getString("host");
 								} catch (NameNotFoundException exception) {
-									// TODO Better exception notification should
-									// be applied.
+									System.err.println(exception);
+									return null;
+								}
+
+								String script = "";
+								try {
+									script = getPackageManager()
+											.getActivityInfo(JoinTeamActivity.this.getComponentName(),
+													PackageManager.GET_ACTIVITIES
+															| PackageManager.GET_META_DATA).metaData
+																	.getString("script");
+								} catch (NameNotFoundException exception) {
+									System.err.println(exception);
 									return null;
 								}
 
@@ -77,34 +89,39 @@ public class JoinTeamActivity extends Activity {
 								String phone = ((EditText) findViewById(R.id.join_team_phone)).getText().toString();
 
 								HttpClient client = new DefaultHttpClient();
-								HttpPost post = new HttpPost(host);
+								HttpPost post = new HttpPost("http://" + host + "/" + script);
 
 								JSONObject json = new JSONObject();
 								try {
 									json.put(Util.JSON_INSTNCE_HASH_CODE_KEY, instanceHash);
+									json.put(Util.JSON_NAMES_KEY, names);
 									json.put(Util.JSON_EMAIL_KEY, email);
 									json.put(Util.JSON_PHONE_KEY, phone);
 								} catch (JSONException exception) {
-									// TODO Do better exception handling.
+									System.err.println(exception);
 								}
 
 								List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-								pairs.add(new BasicNameValuePair("request", json.toString()));
+								pairs.add(new BasicNameValuePair("join", json.toString()));
 								try {
 									post.setEntity(new UrlEncodedFormEntity(pairs));
-								} catch (UnsupportedEncodingException e) {
+								} catch (UnsupportedEncodingException exception) {
+									System.err.println(exception);
 								}
 
 								try {
 									HttpResponse response = client.execute(post);
-								} catch (ClientProtocolException excetpion) {
+								} catch (ClientProtocolException exception) {
+									System.err.println(exception);
 								} catch (IOException exception) {
+									System.err.println(exception);
 								}
 
 								return null;
 							}
 						}).execute();
 
+						Toast.makeText(JoinTeamActivity.this, R.string.join_request_send, Toast.LENGTH_SHORT).show();
 						JoinTeamActivity.this.finish();
 					}
 				});

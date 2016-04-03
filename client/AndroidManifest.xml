@@ -15,6 +15,16 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="host"
+            android:value="192.168.0.103" />
+
+        <service android:name=".NewMessageCheckService" >
+            <meta-data
+                android:name="script"
+                android:value="new_message_check.php" />
+        </service>
+
         <activity
             android:name=".LobbyActivity"
             android:label="@string/title_activity_lobby" >
@@ -32,22 +42,16 @@
             android:name=".RequestActivity"
             android:label="@string/title_activity_request" >
             <meta-data
-                android:name="host"
-                android:value="192.168.0.102" />
-            <meta-data
                 android:name="script"
                 android:value="request.php" />
-            </activity>
+        </activity>
         <activity
             android:name=".JoinTeamActivity"
             android:label="@string/title_activity_join_team" >
             <meta-data
-                android:name="host"
-                android:value="192.168.0.102" />
-            <meta-data
                 android:name="script"
                 android:value="join.php" />
-            </activity>
+        </activity>
     </application>
 
 </manifest>

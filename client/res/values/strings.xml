@@ -18,5 +18,6 @@
     <string name="title_activity_join_team">Join the Team</string>
     <string name="about_text"></string>
     <string name="request_message_send">Message Send</string>
+    <string name="join_request_send">Join Request Send</string>
     
 </resources>

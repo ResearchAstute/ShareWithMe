@@ -35,6 +35,11 @@ class Util {
 	/**
 	 * 
 	 */
+	static final String JSON_NAMES_KEY = "names";
+
+	/**
+	 * 
+	 */
 	static final String JSON_EMAIL_KEY = "email";
 
 	/**
