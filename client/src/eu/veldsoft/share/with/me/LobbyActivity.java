@@ -3,6 +3,9 @@ package eu.veldsoft.share.with.me;
 import java.util.UUID;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -53,6 +56,11 @@ public class LobbyActivity extends Activity {
 		 * Check every time on application load.
 		 */
 		registerHash();
+
+		/*
+		 * Wake-up alarm for checking new messages.
+		 */
+		startService(new Intent(this, NewMessageCheckService.class));
 
 		((Button) findViewById(R.id.request)).setOnClickListener(new View.OnClickListener() {
 			/**

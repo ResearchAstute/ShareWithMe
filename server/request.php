@@ -13,13 +13,13 @@ if(isset($_POST['request'])) {
 	foreach ($json as $key => $value) {
 		//TODO Move keys as constants in separate PHP file.
 		if($key == 'message_hash') {
-			$message_hash = $value;
+			$message_hash = mysql_real_escape_string( $value );
 		}
 		if($key == 'instance_hash') {
-			$instance_hash = $value;
+			$instance_hash = mysql_real_escape_string( $value );
 		}
 		if($key == 'message') {
-			$message = $value;
+			$message = mysql_real_escape_string( $value );
 		}
 	}
 

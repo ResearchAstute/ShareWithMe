@@ -15,16 +15,16 @@ if(isset($_POST['join'])) {
 	foreach ($json as $key => $value) {
 		//TODO Move keys as constants in separate PHP file.
 		if($key == 'instance_hash') {
-			$instance_hash = $value;
+			$instance_hash = mysql_real_escape_string( $value );
 		}
 		if($key == 'names') {
-			$names = $value;
+			$names = mysql_real_escape_string( $value );
 		}
 		if($key == 'email') {
-			$email = $value;
+			$email = mysql_real_escape_string( $value );
 		}
 		if($key == 'phone') {
-			$phone = $value;
+			$phone = mysql_real_escape_string( $value );
 		}
 	}
 
