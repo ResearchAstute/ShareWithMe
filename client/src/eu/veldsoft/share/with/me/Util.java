@@ -25,6 +25,11 @@ class Util {
 	/**
 	 * 
 	 */
+	protected static final String JSON_PARENT_HASH_CODE_KEY = "parent_hash";
+
+	/**
+	 * 
+	 */
 	protected static final String JSON_MESSAGE_HASH_CODE_KEY = "message_hash";
 
 	/**
@@ -56,4 +61,9 @@ class Util {
 	 * Find better way for giving value of this constant.
 	 */
 	protected static final int ALARM_REQUEST_CODE = 0;
+
+	/**
+	 * Parent message hash key.
+	 */
+	protected static final String PARENT_MESSAGE_HASH_KEY = "eu.veldsoft.share.with.me.parent.message.hash";
 }

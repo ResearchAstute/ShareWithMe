@@ -19,5 +19,9 @@
     <string name="about_text"></string>
     <string name="request_message_send">Message Send</string>
     <string name="join_request_send">Join Request Send</string>
-    
+    <string name="title_activity_answer_message">AnswerMessageActivity</string>
+    <string name="reject_replay_label">Reject Replay</string>
+    <string name="replay_later_label">Replay Later</string>
+    <string name="send_replay_label">Send Replay</string>
+
 </resources>

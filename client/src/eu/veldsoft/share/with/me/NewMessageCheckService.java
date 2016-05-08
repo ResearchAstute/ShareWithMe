@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -29,8 +28,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
-import android.widget.EditText;
-import android.widget.Toast;
 
 /**
  * 
@@ -63,7 +60,7 @@ public class NewMessageCheckService extends IntentService {
 	 * @param name
 	 */
 	public NewMessageCheckService() {
-		//TODO Find better way to give name of the service.
+		// TODO Find better way to give name of the service.
 		super("NewMessageCheckService");
 	}
 
@@ -142,8 +139,17 @@ public class NewMessageCheckService extends IntentService {
 
 				try {
 					HttpResponse response = client.execute(post);
-					// TODO If there is a new message open message read activity (by sending
+
+					String messageHash = "";
+					// TODO If there is a new message open message read activity
+					// (by sending
 					// message hash as parameter).
+
+					if (messageHash != "") {
+						Intent intent = new Intent(NewMessageCheckService.this, AboutActivity.class);
+						intent.putExtra(Util.PARENT_MESSAGE_HASH_KEY, messageHash);
+						startActivity(intent);
+					}
 				} catch (ClientProtocolException exception) {
 					System.err.println(exception);
 				} catch (IOException exception) {

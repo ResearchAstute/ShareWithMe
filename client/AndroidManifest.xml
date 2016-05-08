@@ -21,6 +21,20 @@
             android:name="host"
             android:value="192.168.0.102" />
 
+        <receiver
+            android:name=".NewMessageCheckReceiver"
+            android:enabled="true"
+            android:process=":remote" >
+        </receiver>
+        <receiver
+            android:name=".BootReceiver"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".NewMessageCheckService"
             android:exported="false" >
@@ -59,20 +73,13 @@
                 android:name="script"
                 android:value="join.php" />
         </activity>
-
-        <receiver
-            android:name=".NewMessageCheckReceiver"
-            android:enabled="true"
-            android:process=":remote" >
-        </receiver>
-        <receiver
-            android:name=".BootReceiver"
-            android:enabled="true"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
+        <activity
+            android:name=".AnswerMessageActivity"
+            android:label="@string/title_activity_answer_message" >
+            <meta-data
+                android:name="script"
+                android:value="answer.php" />
+        </activity>
     </application>
 
 </manifest>
