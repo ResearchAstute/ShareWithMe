@@ -25,6 +25,9 @@
             android:name=".NewMessageCheckService"
             android:exported="false" >
             <meta-data
+                android:name="name"
+                android:value="NewMessageCheckService" />
+            <meta-data
                 android:name="script"
                 android:value="new_message_check.php" />
         </service>

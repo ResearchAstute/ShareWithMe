@@ -63,6 +63,7 @@ public class NewMessageCheckService extends IntentService {
 	 * @param name
 	 */
 	public NewMessageCheckService() {
+		//TODO Find better way to give name of the service.
 		super("NewMessageCheckService");
 	}
 
