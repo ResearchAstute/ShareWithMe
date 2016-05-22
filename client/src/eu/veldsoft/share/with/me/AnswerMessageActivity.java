@@ -27,6 +27,8 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+import eu.veldsoft.share.with.me.model.Util;
+import eu.veldsoft.share.with.me.storage.MessageHistoryDatabaseHelper;
 
 /**
  * 
@@ -39,6 +41,11 @@ public class AnswerMessageActivity extends Activity {
 	private String parentHash = "";
 
 	/**
+	 * 
+	 */
+	private String registered = "";
+
+	/**
 	 * {@inheritDoc}}
 	 */
 	@Override
@@ -47,13 +54,11 @@ public class AnswerMessageActivity extends Activity {
 		setContentView(R.layout.activity_answer_message);
 
 		/*
-		 * Obtain parent message hash code.
+		 * Obtain parent message hash code and registration time stamp.
 		 */
+		registered = (getIntent().getExtras() != null) ? getIntent().getExtras().getString(Util.REGISTERED_KEY) : "";
 		parentHash = (getIntent().getExtras() != null) ? getIntent().getExtras().getString(Util.PARENT_MESSAGE_HASH_KEY)
 				: "";
-
-		// TODO By using hash load message and message timestamp from the remote
-		// server.
 
 		/*
 		 * Only mark the message as read.
@@ -65,7 +70,9 @@ public class AnswerMessageActivity extends Activity {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						// TODO Mark in SQLite message as handled.
+						MessageHistoryDatabaseHelper helper = new MessageHistoryDatabaseHelper(
+								AnswerMessageActivity.this);
+						helper.setLastMessage(parentHash, registered);
 					}
 				});
 
@@ -93,7 +100,9 @@ public class AnswerMessageActivity extends Activity {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						// TODO Mark in SQLite message as handled.
+						MessageHistoryDatabaseHelper helper = new MessageHistoryDatabaseHelper(
+								AnswerMessageActivity.this);
+						helper.setLastMessage(parentHash, registered);
 
 						(new AsyncTask<Void, Void, Void>() {
 							@Override

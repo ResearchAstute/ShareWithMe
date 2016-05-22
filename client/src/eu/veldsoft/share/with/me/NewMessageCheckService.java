@@ -1,5 +1,6 @@
 package eu.veldsoft.share.with.me;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -25,9 +26,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
+import eu.veldsoft.share.with.me.model.Util;
+import eu.veldsoft.share.with.me.storage.MessageHistoryDatabaseHelper;
 
 /**
  * 
@@ -111,12 +115,10 @@ public class NewMessageCheckService extends IntentService {
 
 				String instanceHash = preference.getString(Util.SHARED_PREFERENCE_INSTNCE_HASH_CODE_KEY, "");
 
-				// TODO Check in SQLite what is the last message hash.
-				String lastMessageHash = "";
-
-				// TODO device-hash, last-message-hash
-				// TODO Local SQLite database.
-				// TODO Remote MySQL select queries.
+				// TODO Check in SQLite what is the last message hash and take
+				// special care when the local SQLite database is empty.
+				MessageHistoryDatabaseHelper helper = new MessageHistoryDatabaseHelper(NewMessageCheckService.this);
+				String lastMessageHash = helper.getLastMessageHash();
 
 				HttpClient client = new DefaultHttpClient();
 				HttpPost post = new HttpPost("http://" + host + "/" + script);
@@ -140,19 +142,28 @@ public class NewMessageCheckService extends IntentService {
 				try {
 					HttpResponse response = client.execute(post);
 
-					String messageHash = "";
-					// TODO If there is a new message open message read activity
-					// (by sending
-					// message hash as parameter).
+					DataInputStream in = new DataInputStream(response.getEntity().getContent());
+					JSONObject result = new JSONObject(in.readUTF());
 
-					if (messageHash != "") {
+					String messageHash = result.getString(Util.JSON_MESSAGE_HASH_CODE_KEY);
+					String messageRegistered = result.getString(Util.JSON_REGISTERED_KEY);
+					boolean messageFound = result.getBoolean(Util.JSON_FOUND_KEY);
+
+					/*
+					 * If there is a new message open message read activity (by
+					 * sending message hash as parameter).
+					 */
+					if (messageHash != "" && messageFound == true) {
 						Intent intent = new Intent(NewMessageCheckService.this, AboutActivity.class);
 						intent.putExtra(Util.PARENT_MESSAGE_HASH_KEY, messageHash);
+						intent.putExtra(Util.REGISTERED_KEY, messageRegistered);
 						startActivity(intent);
 					}
 				} catch (ClientProtocolException exception) {
 					System.err.println(exception);
 				} catch (IOException exception) {
+					System.err.println(exception);
+				} catch (JSONException exception) {
 					System.err.println(exception);
 				}
 

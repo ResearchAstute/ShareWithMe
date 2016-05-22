@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme" >
         <meta-data
             android:name="host"
-            android:value="192.168.0.102" />
+            android:value="192.168.0.101" />
 
         <receiver
             android:name=".NewMessageCheckReceiver"

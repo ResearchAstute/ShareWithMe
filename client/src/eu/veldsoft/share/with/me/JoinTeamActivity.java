@@ -26,6 +26,7 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+import eu.veldsoft.share.with.me.model.Util;
 
 /**
  * 

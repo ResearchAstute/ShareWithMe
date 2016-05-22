@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.provider.Settings.Secure;
 import android.view.View;
 import android.widget.Button;
+import eu.veldsoft.share.with.me.model.Util;
 
 /**
  * 
