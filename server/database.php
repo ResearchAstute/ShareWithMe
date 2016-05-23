@@ -16,14 +16,14 @@ function query_my_db( $qrystr )
 {
 	$qrystr = eregi_replace("\;$", "", $qrystr);
 
-	if( !$GLOBALS['link'] )
+	$resstrs = "";
+	if( !$GLOBALS['link'] ) {
 		$resstrs = false;
-	else
-	{
+	} else {
 		$result = mysql_query($qrystr, $GLOBALS['link']);
 
 		$j = 0;
-		if($result!=1 && $result!=false)
+		if($result!=1 && $result!=false) {
 			while($row = mysql_fetch_row($result))
 			{
 				for($i=0; $i<mysql_num_fields($result); $i++)
@@ -31,8 +31,9 @@ function query_my_db( $qrystr )
 
 				$j++;
 			}
-     		else
+     	} else {
 			$resstrs = false;
+		}
 	}
 
 	return( $resstrs );

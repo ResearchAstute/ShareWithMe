@@ -13,6 +13,7 @@ public class NewMessageCheckReceiver extends BroadcastReceiver {
 	 * 
 	 */
 	public NewMessageCheckReceiver() {
+System.err.println("Test point 1 ...");
 	}
 
 	/**
@@ -21,6 +22,8 @@ public class NewMessageCheckReceiver extends BroadcastReceiver {
 	 */
 	@Override
 	public void onReceive(Context context, Intent intent) {
+System.err.println("Test point 2 ...");
 		context.startService(new Intent(context, NewMessageCheckService.class));
+System.err.println("Test point 3 ...");
 	}
 }

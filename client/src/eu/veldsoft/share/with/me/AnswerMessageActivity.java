@@ -60,6 +60,8 @@ public class AnswerMessageActivity extends Activity {
 		parentHash = (getIntent().getExtras() != null) ? getIntent().getExtras().getString(Util.PARENT_MESSAGE_HASH_KEY)
 				: "";
 
+		//TODO Load message from the remote server.
+		
 		/*
 		 * Only mark the message as read.
 		 */
