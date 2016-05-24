@@ -1,6 +1,5 @@
 package eu.veldsoft.share.with.me;
 
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -19,8 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.AlarmManager;
-import android.app.IntentService;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +27,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
+import android.os.Binder;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import eu.veldsoft.share.with.me.model.Util;
@@ -37,7 +38,12 @@ import eu.veldsoft.share.with.me.storage.MessageHistoryDatabaseHelper;
  * 
  * @author
  */
-public class NewMessageCheckService extends IntentService {
+public class NewMessageCheckService extends Service {
+	/**
+	 * 
+	 */
+	MessageHistoryDatabaseHelper helper = null;
+
 	/**
 	 * 
 	 */
@@ -68,7 +74,6 @@ System.err.println("Test point 6 ...");
 	 */
 	public NewMessageCheckService() {
 		// TODO Find better way to give name of the service.
-		super("NewMessageCheckService");
 System.err.println("Test point 7 ...");
 	}
 
@@ -76,7 +81,7 @@ System.err.println("Test point 7 ...");
 	 * 
 	 */
 	@Override
-	protected void onHandleIntent(Intent intent) {
+	public int onStartCommand(Intent intent, int flags, int id) {
 System.err.println("Test point 8 ...");
 		/*
 		 * Check alarm.
@@ -126,9 +131,11 @@ System.err.println("Test point 13 ...");
 				String instanceHash = preference.getString(Util.SHARED_PREFERENCE_INSTNCE_HASH_CODE_KEY, "");
 System.err.println("Test point 14 ...");
 
+				if(helper == null) {
+					return null;
+				}
 				// TODO Check in SQLite what is the last message hash and take
 				// special care when the local SQLite database is empty.
-				MessageHistoryDatabaseHelper helper = new MessageHistoryDatabaseHelper(NewMessageCheckService.this);
 				String lastMessageHash = helper.getLastMessageHash();
 System.err.println("Test point 15 ...");
 
@@ -187,9 +194,49 @@ System.err.println("Test point 23 ...");
 				}
 System.err.println("Test point 24 ...");
 
+				NewMessageCheckService.this.stopSelf();
+System.err.println("Test point 29 ...");
 				return null;
 			}
 		}).execute();
+		
+		return START_NOT_STICKY;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+    public void onCreate() {
+		super.onCreate();
+System.err.println("Test point 25 ...");
+		helper = new MessageHistoryDatabaseHelper(this);
+System.err.println("Test point 26 ...");
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+    public void onDestroy() {
+System.err.println("Test point 27 ...");
+		if(helper != null) {
+			helper.close();
+			helper = null;
+		}
+System.err.println("Test point 28 ...");
+		super.onDestroy();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IBinder onBind(Intent intent) {
+		return new Binder() {
+		    Service getService() {
+		        return NewMessageCheckService.this;
+		    }
+		};
+	}
 }

@@ -100,6 +100,9 @@ public class MessageHistoryDatabaseHelper extends SQLiteOpenHelper {
 		}
 
 		cursor.moveToFirst();
-		return cursor.getString(0);
+		String result = cursor.getString(0);
+		cursor.close();
+		
+		return result;
 	}
 }
