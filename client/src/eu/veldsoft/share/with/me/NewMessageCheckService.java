@@ -59,9 +59,21 @@ System.err.println("Test point 4 ...");
 		}
 System.err.println("Test point 5 ...");
 
-		// TODO It will be better to parameterize weak-up interval.
+		/* 
+		 * Parameterize weak-up interval.
+		 */
+		long interval = AlarmManager.INTERVAL_HALF_HOUR;
+		try {
+			interval = getPackageManager().getServiceInfo(
+					new ComponentName(NewMessageCheckService.this, NewMessageCheckService.this.getClass()),
+					PackageManager.GET_SERVICES | PackageManager.GET_META_DATA).metaData.getLong("interval");
+		} catch (NameNotFoundException exception) {
+			interval = AlarmManager.INTERVAL_HALF_HOUR;
+			System.err.println(exception);
+		}
+
 		((AlarmManager) this.getSystemService(Context.ALARM_SERVICE)).setInexactRepeating(AlarmManager.RTC_WAKEUP,
-				System.currentTimeMillis(), 60000/*AlarmManager.INTERVAL_HALF_HOUR*/,
+				System.currentTimeMillis(), interval,
 				PendingIntent.getBroadcast(this, Util.ALARM_REQUEST_CODE,
 						new Intent(getApplicationContext(), NewMessageCheckReceiver.class),
 						PendingIntent.FLAG_UPDATE_CURRENT));
