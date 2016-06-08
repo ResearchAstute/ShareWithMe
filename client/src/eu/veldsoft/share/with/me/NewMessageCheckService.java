@@ -28,7 +28,9 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import eu.veldsoft.share.with.me.model.Util;
@@ -48,7 +50,7 @@ public class NewMessageCheckService extends Service {
 	 * 
 	 */
 	private void setupAlarm() {
-System.err.println("Test point 4 ...");
+		System.err.println("Test point 4 ...");
 		/*
 		 * Do not set if it is already there.
 		 */
@@ -57,16 +59,17 @@ System.err.println("Test point 4 ...");
 				PendingIntent.FLAG_NO_CREATE) != null) {
 			return;
 		}
-System.err.println("Test point 5 ...");
+		System.err.println("Test point 5 ...");
 
-		/* 
+		/*
 		 * Parameterize weak-up interval.
 		 */
 		long interval = AlarmManager.INTERVAL_HALF_HOUR;
 		try {
 			interval = getPackageManager().getServiceInfo(
 					new ComponentName(NewMessageCheckService.this, NewMessageCheckService.this.getClass()),
-					PackageManager.GET_SERVICES | PackageManager.GET_META_DATA).metaData.getLong("interval");
+					PackageManager.GET_SERVICES | PackageManager.GET_META_DATA).metaData.getInt("activation_interval",
+							(int) AlarmManager.INTERVAL_HALF_HOUR);
 		} catch (NameNotFoundException exception) {
 			interval = AlarmManager.INTERVAL_HALF_HOUR;
 			System.err.println(exception);
@@ -77,7 +80,7 @@ System.err.println("Test point 5 ...");
 				PendingIntent.getBroadcast(this, Util.ALARM_REQUEST_CODE,
 						new Intent(getApplicationContext(), NewMessageCheckReceiver.class),
 						PendingIntent.FLAG_UPDATE_CURRENT));
-System.err.println("Test point 6 ...");
+		System.err.println("Test point 6 ...");
 	}
 
 	/**
@@ -86,7 +89,7 @@ System.err.println("Test point 6 ...");
 	 */
 	public NewMessageCheckService() {
 		// TODO Find better way to give name of the service.
-System.err.println("Test point 7 ...");
+		System.err.println("Test point 7 ...");
 	}
 
 	/**
@@ -94,12 +97,12 @@ System.err.println("Test point 7 ...");
 	 */
 	@Override
 	public int onStartCommand(Intent intent, int flags, int id) {
-System.err.println("Test point 8 ...");
+		System.err.println("Test point 8 ...");
 		/*
 		 * Check alarm.
 		 */
 		setupAlarm();
-System.err.println("Test point 9 ...");
+		System.err.println("Test point 9 ...");
 
 		/*
 		 * Release wake-up lock.
@@ -107,7 +110,7 @@ System.err.println("Test point 9 ...");
 		if (intent.getAction() == Intent.ACTION_BOOT_COMPLETED) {
 			WakefulBroadcastReceiver.completeWakefulIntent(intent);
 		}
-System.err.println("Test point 10 ...");
+		System.err.println("Test point 10 ...");
 
 		/*
 		 * Check for new message.
@@ -115,7 +118,7 @@ System.err.println("Test point 10 ...");
 		(new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground(Void... params) {
-System.err.println("Test point 11 ...");
+				System.err.println("Test point 11 ...");
 				String host = "";
 				try {
 					host = getPackageManager().getApplicationInfo(NewMessageCheckService.this.getPackageName(),
@@ -124,7 +127,7 @@ System.err.println("Test point 11 ...");
 					System.err.println(exception);
 					return null;
 				}
-System.err.println("Test point 12 ...");
+				System.err.println("Test point 12 ...");
 
 				String script = "";
 				try {
@@ -135,25 +138,25 @@ System.err.println("Test point 12 ...");
 					System.err.println(exception);
 					return null;
 				}
-System.err.println("Test point 13 ...");
+				System.err.println("Test point 13 ...");
 
 				SharedPreferences preference = PreferenceManager
 						.getDefaultSharedPreferences(NewMessageCheckService.this);
 
 				String instanceHash = preference.getString(Util.SHARED_PREFERENCE_INSTNCE_HASH_CODE_KEY, "");
-System.err.println("Test point 14 ...");
+				System.err.println("Test point 14 ...");
 
-				if(helper == null) {
+				if (helper == null) {
 					return null;
 				}
 				// TODO Check in SQLite what is the last message hash and take
 				// special care when the local SQLite database is empty.
 				String lastMessageHash = helper.getLastMessageHash();
-System.err.println("Test point 15 ...");
+				System.err.println("Test point 15 ...");
 
 				HttpClient client = new DefaultHttpClient();
 				HttpPost post = new HttpPost("http://" + host + "/" + script);
-System.err.println("Test point 16 ...");
+				System.err.println("Test point 16 ...");
 
 				JSONObject json = new JSONObject();
 				try {
@@ -162,7 +165,7 @@ System.err.println("Test point 16 ...");
 				} catch (JSONException exception) {
 					System.err.println(exception);
 				}
-System.err.println("Test point 17 ...");
+				System.err.println("Test point 17 ...");
 
 				List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 				pairs.add(new BasicNameValuePair("new_message_check", json.toString()));
@@ -171,31 +174,34 @@ System.err.println("Test point 17 ...");
 				} catch (UnsupportedEncodingException exception) {
 					System.err.println(exception);
 				}
-System.err.println("Test point 18 ...");
+				System.err.println("Test point 18 ...");
 
 				try {
 					HttpResponse response = client.execute(post);
-System.err.println("Test point 19 ...");
+					System.err.println("Test point 19 ...");
 
 					JSONObject result = new JSONObject(EntityUtils.toString(response.getEntity(), "UTF-8"));
 
-					String messageHash = result.getString(Util.JSON_MESSAGE_HASH_CODE_KEY);
-					String messageRegistered = result.getString(Util.JSON_REGISTERED_KEY);
+					final String messageHash = result.getString(Util.JSON_MESSAGE_HASH_CODE_KEY);
+					final String messageRegistered = result.getString(Util.JSON_REGISTERED_KEY);
 					boolean messageFound = result.getBoolean(Util.JSON_FOUND_KEY);
-System.err.println("Test point 20 ...");
+					System.err.println("Test point 20 ...");
+					System.err.println(messageFound);
+					System.err.println(messageHash);
 
 					/*
 					 * If there is a new message open message read activity (by
 					 * sending message hash as parameter).
 					 */
 					if (messageHash != "" && messageFound == true) {
-System.err.println("Test point 21 ...");
-						Intent intent = new Intent(NewMessageCheckService.this, AboutActivity.class);
+						System.err.println("Test point 21 ...");
+						Intent intent = new Intent(NewMessageCheckService.this, AnswerMessageActivity.class);
+						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						intent.putExtra(Util.PARENT_MESSAGE_HASH_KEY, messageHash);
 						intent.putExtra(Util.REGISTERED_KEY, messageRegistered);
-System.err.println("Test point 22 ...");
+						System.err.println("Test point 22 ...");
 						startActivity(intent);
-System.err.println("Test point 23 ...");
+						System.err.println("Test point 23 ...");
 					}
 				} catch (ClientProtocolException exception) {
 					System.err.println(exception);
@@ -204,14 +210,14 @@ System.err.println("Test point 23 ...");
 				} catch (JSONException exception) {
 					System.err.println(exception);
 				}
-System.err.println("Test point 24 ...");
+				System.err.println("Test point 24 ...");
 
 				NewMessageCheckService.this.stopSelf();
-System.err.println("Test point 29 ...");
+				System.err.println("Test point 29 ...");
 				return null;
 			}
 		}).execute();
-		
+
 		return START_NOT_STICKY;
 	}
 
@@ -219,24 +225,24 @@ System.err.println("Test point 29 ...");
 	 * {@inheritDoc}
 	 */
 	@Override
-    public void onCreate() {
+	public void onCreate() {
 		super.onCreate();
-System.err.println("Test point 25 ...");
+		System.err.println("Test point 25 ...");
 		helper = new MessageHistoryDatabaseHelper(this);
-System.err.println("Test point 26 ...");
+		System.err.println("Test point 26 ...");
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-    public void onDestroy() {
-System.err.println("Test point 27 ...");
-		if(helper != null) {
+	public void onDestroy() {
+		System.err.println("Test point 27 ...");
+		if (helper != null) {
 			helper.close();
 			helper = null;
 		}
-System.err.println("Test point 28 ...");
+		System.err.println("Test point 28 ...");
 		super.onDestroy();
 	}
 
@@ -246,9 +252,9 @@ System.err.println("Test point 28 ...");
 	@Override
 	public IBinder onBind(Intent intent) {
 		return new Binder() {
-		    Service getService() {
-		        return NewMessageCheckService.this;
-		    }
+			Service getService() {
+				return NewMessageCheckService.this;
+			}
 		};
 	}
 }
