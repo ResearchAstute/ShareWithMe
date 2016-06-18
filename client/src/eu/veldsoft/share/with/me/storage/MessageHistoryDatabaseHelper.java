@@ -18,7 +18,6 @@ public class MessageHistoryDatabaseHelper extends SQLiteOpenHelper {
 	 */
 	public static abstract class MessageHistoryColumns implements BaseColumns {
 		public static final String TABLE_NAME = "history";
-		public static final String COLUMN_NAME_ID = "id";
 		public static final String COLUMN_NAME_MESSAGE_HASH = "message_hash";
 		public static final String COLUMN_NAME_MESSAGE_REGISTERED = "registered";
 	}
@@ -36,15 +35,17 @@ public class MessageHistoryDatabaseHelper extends SQLiteOpenHelper {
 	/**
 	 * 
 	 */
-	static final String SQL_CREATE_HISTORY = "CREATE TABLE " + MessageHistoryColumns.TABLE_NAME + " ("
-			+ MessageHistoryColumns._ID + " INTEGER PRIMARY KEY," + MessageHistoryColumns.COLUMN_NAME_ID + " TEXT, "
+	static final String SQL_CREATE_HISTORY = "CREATE TABLE "
+			+ MessageHistoryColumns.TABLE_NAME + " ("
+			+ MessageHistoryColumns._ID + " INTEGER PRIMARY KEY,"
 			+ MessageHistoryColumns.COLUMN_NAME_MESSAGE_HASH + " TEXT, "
 			+ MessageHistoryColumns.COLUMN_NAME_MESSAGE_REGISTERED + " TEXT)";
 
 	/**
 	 * 
 	 */
-	static final String SQL_DELETE_HISTORY = "DROP TABLE IF EXISTS " + MessageHistoryColumns.TABLE_NAME;
+	static final String SQL_DELETE_HISTORY = "DROP TABLE IF EXISTS "
+			+ MessageHistoryColumns.TABLE_NAME;
 
 	/**
 	 * 
@@ -80,7 +81,8 @@ public class MessageHistoryDatabaseHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(MessageHistoryColumns.COLUMN_NAME_MESSAGE_HASH, hash);
-		values.put(MessageHistoryColumns.COLUMN_NAME_MESSAGE_REGISTERED, registered);
+		values.put(MessageHistoryColumns.COLUMN_NAME_MESSAGE_REGISTERED,
+				registered);
 		db.insert(MessageHistoryColumns.TABLE_NAME, null, values);
 	}
 
@@ -91,9 +93,12 @@ public class MessageHistoryDatabaseHelper extends SQLiteOpenHelper {
 	 */
 	public String getLastMessageHash() {
 		SQLiteDatabase db = getReadableDatabase();
-		Cursor cursor = db.query(MessageHistoryColumns.TABLE_NAME,
-				new String[] { MessageHistoryColumns.COLUMN_NAME_MESSAGE_HASH }, null, null, null, null,
-				MessageHistoryColumns.COLUMN_NAME_ID + " DESC", "1");
+		Cursor cursor = db
+				.query(MessageHistoryColumns.TABLE_NAME,
+						new String[] { MessageHistoryColumns.COLUMN_NAME_MESSAGE_HASH },
+						null, null, null, null,
+						MessageHistoryColumns.COLUMN_NAME_MESSAGE_REGISTERED
+								+ " DESC", "1");
 
 		if (cursor.getCount() == 0) {
 			return "";
@@ -102,7 +107,7 @@ public class MessageHistoryDatabaseHelper extends SQLiteOpenHelper {
 		cursor.moveToFirst();
 		String result = cursor.getString(0);
 		cursor.close();
-		
+
 		return result;
 	}
 }

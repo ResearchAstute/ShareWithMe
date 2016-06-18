@@ -22,7 +22,7 @@
         <!-- TODO Add settings dialog with host option. -->
         <meta-data
             android:name="host"
-            android:value="192.168.0.105" />
+            android:value="192.168.0.107" />
 
         <receiver
             android:name=".NewMessageCheckReceiver"

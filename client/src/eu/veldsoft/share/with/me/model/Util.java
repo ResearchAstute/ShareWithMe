@@ -41,6 +41,11 @@ final public class Util {
 	/**
 	 * 
 	 */
+	public static final String JSON_LAST_MESSAGE_HASH_CODE_KEY = "last_message_hash";
+
+	/**
+	 * 
+	 */
 	public static final String JSON_MESSAGE_KEY = "message";
 
 	/**
@@ -67,11 +72,6 @@ final public class Util {
 	 * 
 	 */
 	public static final String JSON_PHONE_KEY = "phone";
-
-	/**
-	 * 
-	 */
-	public static final String JSON_LAST_MESSAGE_HASH_CODE_KEY = "last_message";
 
 	/**
 	 * Find better way for giving value of this constant.

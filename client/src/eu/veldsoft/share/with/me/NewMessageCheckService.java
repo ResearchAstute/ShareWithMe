@@ -152,6 +152,7 @@ public class NewMessageCheckService extends Service {
 				// TODO Check in SQLite what is the last message hash and take
 				// special care when the local SQLite database is empty.
 				String lastMessageHash = helper.getLastMessageHash();
+				System.err.println(lastMessageHash);
 				System.err.println("Test point 15 ...");
 
 				HttpClient client = new DefaultHttpClient();
