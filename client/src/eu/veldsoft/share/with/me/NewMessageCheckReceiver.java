@@ -5,25 +5,23 @@ import android.content.Context;
 import android.content.Intent;
 
 /**
+ * Alarm listener for new message checking.
  * 
- * @author
+ * @author Ventsislav Medarov
  */
 public class NewMessageCheckReceiver extends BroadcastReceiver {
 	/**
-	 * 
+	 * Receiver constructor.
 	 */
 	public NewMessageCheckReceiver() {
-System.err.println("Test point 1 ...");
+		super();
 	}
 
 	/**
-	 * @param context
-	 * @param intent
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void onReceive(Context context, Intent intent) {
-System.err.println("Test point 2 ...");
 		context.startService(new Intent(context, NewMessageCheckService.class));
-System.err.println("Test point 3 ...");
 	}
 }

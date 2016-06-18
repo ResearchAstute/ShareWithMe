@@ -8,13 +8,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 /**
+ * SQLite database helper class.
  * 
- * @author
+ * @author Ventsislav Medarov
  */
 public class MessageHistoryDatabaseHelper extends SQLiteOpenHelper {
 	/**
 	 * 
-	 * @author
+	 * @author Ventsislav Medarov
 	 */
 	public static abstract class MessageHistoryColumns implements BaseColumns {
 		public static final String TABLE_NAME = "history";
@@ -23,17 +24,17 @@ public class MessageHistoryDatabaseHelper extends SQLiteOpenHelper {
 	}
 
 	/**
-	 * 
+	 * Database integer version.
 	 */
 	public static final int DATABASE_VERSION = 1;
 
 	/**
-	 * 
+	 * Databse file name.
 	 */
 	public static final String DATABASE_NAME = "MessageHistory.db";
 
 	/**
-	 * 
+	 * Create table SQL patter.
 	 */
 	static final String SQL_CREATE_HISTORY = "CREATE TABLE "
 			+ MessageHistoryColumns.TABLE_NAME + " ("
@@ -42,14 +43,16 @@ public class MessageHistoryDatabaseHelper extends SQLiteOpenHelper {
 			+ MessageHistoryColumns.COLUMN_NAME_MESSAGE_REGISTERED + " TEXT)";
 
 	/**
-	 * 
+	 * Drop database SQL pattern.
 	 */
 	static final String SQL_DELETE_HISTORY = "DROP TABLE IF EXISTS "
 			+ MessageHistoryColumns.TABLE_NAME;
 
 	/**
+	 * Helper class constructor.
 	 * 
 	 * @param context
+	 *            Context of the database usage.
 	 */
 	public MessageHistoryDatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -73,9 +76,13 @@ public class MessageHistoryDatabaseHelper extends SQLiteOpenHelper {
 	}
 
 	/**
+	 * Store last known message information inside the local database.
 	 * 
 	 * @param hash
+	 *            Hash code of the message.
 	 * @param registered
+	 *            Data and time of the message registraion in the global
+	 *            database.
 	 */
 	public void setLastMessage(String hash, String registered) {
 		SQLiteDatabase db = getWritableDatabase();
@@ -87,9 +94,9 @@ public class MessageHistoryDatabaseHelper extends SQLiteOpenHelper {
 	}
 
 	/**
+	 * Get last known message hash.
 	 * 
-	 * @param context
-	 * @return
+	 * @return Hash of the last known message.
 	 */
 	public String getLastMessageHash() {
 		SQLiteDatabase db = getReadableDatabase();

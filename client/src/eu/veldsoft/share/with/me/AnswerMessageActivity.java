@@ -32,22 +32,23 @@ import eu.veldsoft.share.with.me.model.Util;
 import eu.veldsoft.share.with.me.storage.MessageHistoryDatabaseHelper;
 
 /**
+ * Message replay screen.
  * 
  * @author Ventsislav Medarov
  */
 public class AnswerMessageActivity extends Activity {
 	/**
-	 * 
+	 * Database helper reference.
 	 */
 	MessageHistoryDatabaseHelper helper = null;
 
 	/**
-	 * 
+	 * Parent message hash code.
 	 */
 	private String parentHash = "";
 
 	/**
-	 * 
+	 * Message registration data-time.
 	 */
 	private String registered = "";
 
@@ -58,9 +59,7 @@ public class AnswerMessageActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_answer_message);
-		System.err.println("Test point 29 ...");
 
-		System.err.println("Test point 31 ...");
 		helper = new MessageHistoryDatabaseHelper(AnswerMessageActivity.this);
 
 		/*
@@ -70,15 +69,14 @@ public class AnswerMessageActivity extends Activity {
 				.getExtras().getString(Util.REGISTERED_KEY) : "";
 		parentHash = (getIntent().getExtras() != null) ? getIntent()
 				.getExtras().getString(Util.PARENT_MESSAGE_HASH_KEY) : "";
-		System.err.println("Test point 30 ...");
 
 		/*
 		 * Only mark the message as read.
 		 */
 		findViewById(R.id.replay_reject).setOnClickListener(
 		/**
-						 * 
-						 */
+		 * {@inheritDoc}
+		 */
 		new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -86,15 +84,10 @@ public class AnswerMessageActivity extends Activity {
 					return;
 				}
 
-				System.err.println("Test point 32 ...");
-				System.err.println(parentHash);
-				System.err.println(registered);
 				helper.setLastMessage(parentHash, registered);
-				System.err.println("Test point 33 ...");
 
 				Toast.makeText(AnswerMessageActivity.this,
 						R.string.discard_replay, Toast.LENGTH_SHORT).show();
-				System.err.println("Test point 34 ...");
 
 				AnswerMessageActivity.this.finish();
 			}
@@ -105,12 +98,11 @@ public class AnswerMessageActivity extends Activity {
 		 */
 		findViewById(R.id.replay_later).setOnClickListener(
 		/**
-				 * 
-				 */
+		 * {@inheritDoc}
+		 */
 		new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				System.err.println("Test point 35 ...");
 				AnswerMessageActivity.this.finish();
 			}
 		});
@@ -120,22 +112,18 @@ public class AnswerMessageActivity extends Activity {
 		 */
 		findViewById(R.id.send_replay).setOnClickListener(
 		/**
-				 * 
-				 */
+		 * {@inheritDoc}
+		 */
 		new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				System.err.println("Test point 36 ...");
 				MessageHistoryDatabaseHelper helper = new MessageHistoryDatabaseHelper(
 						AnswerMessageActivity.this);
-				System.err.println("Test point 37 ...");
 				helper.setLastMessage(parentHash, registered);
 
-				System.err.println("Test point 38 ...");
 				(new AsyncTask<Void, Void, Void>() {
 					@Override
 					protected Void doInBackground(Void... params) {
-						System.err.println("Test point 39 ...");
 						String host = "";
 						try {
 							host = getPackageManager()
@@ -148,7 +136,6 @@ public class AnswerMessageActivity extends Activity {
 							System.err.println(exception);
 							return null;
 						}
-						System.err.println("Test point 40 ...");
 
 						String script = "";
 						try {
@@ -162,11 +149,9 @@ public class AnswerMessageActivity extends Activity {
 							System.err.println(exception);
 							return null;
 						}
-						System.err.println("Test point 41 ...");
 
 						SharedPreferences preference = PreferenceManager
 								.getDefaultSharedPreferences(AnswerMessageActivity.this);
-						System.err.println("Test point 42 ...");
 
 						String instanceHash = preference.getString(
 								Util.SHARED_PREFERENCE_INSTNCE_HASH_CODE_KEY,
@@ -175,12 +160,10 @@ public class AnswerMessageActivity extends Activity {
 								.getLeastSignificantBits());
 						String message = ((EditText) findViewById(R.id.message_write))
 								.getText().toString();
-						System.err.println("Test point 43 ...");
 
 						HttpClient client = new DefaultHttpClient();
 						HttpPost post = new HttpPost("http://" + host + "/"
 								+ script);
-						System.err.println("Test point 44 ...");
 
 						JSONObject json = new JSONObject();
 						try {
@@ -193,7 +176,6 @@ public class AnswerMessageActivity extends Activity {
 						} catch (JSONException exception) {
 							System.err.println(exception);
 						}
-						System.err.println("Test point 45 ...");
 
 						List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 						pairs.add(new BasicNameValuePair("replay", json
@@ -203,7 +185,6 @@ public class AnswerMessageActivity extends Activity {
 						} catch (UnsupportedEncodingException exception) {
 							System.err.println(exception);
 						}
-						System.err.println("Test point 46 ...");
 
 						try {
 							HttpResponse response = client.execute(post);
@@ -212,13 +193,11 @@ public class AnswerMessageActivity extends Activity {
 						} catch (IOException exception) {
 							System.err.println(exception);
 						}
-						System.err.println("Test point 47 ...");
 
 						return null;
 					}
 				}).execute();
 
-				System.err.println("Test point 48 ...");
 				Toast.makeText(AnswerMessageActivity.this,
 						R.string.request_message_send, Toast.LENGTH_SHORT)
 						.show();
@@ -232,7 +211,6 @@ public class AnswerMessageActivity extends Activity {
 		(new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground(Void... params) {
-				System.err.println("Test point 49 ...");
 				String host = "";
 				try {
 					host = getPackageManager().getApplicationInfo(
@@ -243,7 +221,6 @@ public class AnswerMessageActivity extends Activity {
 					System.err.println(exception);
 					return null;
 				}
-				System.err.println("Test point 50 ...");
 
 				String script = "";
 				try {
@@ -256,11 +233,9 @@ public class AnswerMessageActivity extends Activity {
 					System.err.println(exception);
 					return null;
 				}
-				System.err.println("Test point 51 ...");
 
 				HttpClient client = new DefaultHttpClient();
 				HttpPost post = new HttpPost("http://" + host + "/" + script);
-				System.err.println("Test point 52 ...");
 
 				JSONObject json = new JSONObject();
 				try {
@@ -268,7 +243,6 @@ public class AnswerMessageActivity extends Activity {
 				} catch (JSONException exception) {
 					System.err.println(exception);
 				}
-				System.err.println("Test point 53 ...");
 
 				List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 				pairs.add(new BasicNameValuePair("get_message", json.toString()));
@@ -277,26 +251,21 @@ public class AnswerMessageActivity extends Activity {
 				} catch (UnsupportedEncodingException exception) {
 					System.err.println(exception);
 				}
-				System.err.println("Test point 54 ...");
 
 				try {
 					HttpResponse response = client.execute(post);
-					System.err.println("Test point 55 ...");
 
 					JSONObject result = new JSONObject(EntityUtils.toString(
 							response.getEntity(), "UTF-8"));
-					System.err.println("Test point 56 ...");
 
 					String message = result.getString(Util.JSON_MESSAGE_KEY);
 					boolean found = result.getBoolean(Util.JSON_FOUND_KEY);
-					System.err.println("Test point 57 ...");
 
 					/*
 					 * If there is a new message open message read activity (by
 					 * sending message hash as parameter).
 					 */
 					if (found == true) {
-						System.err.println("Test point 58 ...");
 						((EditText) findViewById(R.id.message_read))
 								.setText(message);
 					}
@@ -307,7 +276,6 @@ public class AnswerMessageActivity extends Activity {
 				} catch (JSONException exception) {
 					System.err.println(exception);
 				}
-				System.err.println("Test point 59 ...");
 
 				return null;
 			}

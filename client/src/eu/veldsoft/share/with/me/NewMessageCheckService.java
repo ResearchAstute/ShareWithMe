@@ -28,38 +28,36 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import eu.veldsoft.share.with.me.model.Util;
 import eu.veldsoft.share.with.me.storage.MessageHistoryDatabaseHelper;
 
 /**
+ * Demon process for new message chcking.
  * 
- * @author
+ * @author Ventsislav Medarov
  */
 public class NewMessageCheckService extends Service {
 	/**
-	 * 
+	 * Reference to database helper.
 	 */
 	MessageHistoryDatabaseHelper helper = null;
 
 	/**
-	 * 
+	 * Setup alarm for service activation.
 	 */
 	private void setupAlarm() {
-		System.err.println("Test point 4 ...");
 		/*
 		 * Do not set if it is already there.
 		 */
 		if (PendingIntent.getBroadcast(this, Util.ALARM_REQUEST_CODE,
-				new Intent(getApplicationContext(), NewMessageCheckReceiver.class),
+				new Intent(getApplicationContext(),
+						NewMessageCheckReceiver.class),
 				PendingIntent.FLAG_NO_CREATE) != null) {
 			return;
 		}
-		System.err.println("Test point 5 ...");
 
 		/*
 		 * Parameterize weak-up interval.
@@ -67,42 +65,43 @@ public class NewMessageCheckService extends Service {
 		long interval = AlarmManager.INTERVAL_HALF_HOUR;
 		try {
 			interval = getPackageManager().getServiceInfo(
-					new ComponentName(NewMessageCheckService.this, NewMessageCheckService.this.getClass()),
-					PackageManager.GET_SERVICES | PackageManager.GET_META_DATA).metaData.getInt("activation_interval",
+					new ComponentName(NewMessageCheckService.this,
+							NewMessageCheckService.this.getClass()),
+					PackageManager.GET_SERVICES | PackageManager.GET_META_DATA).metaData
+					.getInt("activation_interval",
 							(int) AlarmManager.INTERVAL_HALF_HOUR);
 		} catch (NameNotFoundException exception) {
 			interval = AlarmManager.INTERVAL_HALF_HOUR;
 			System.err.println(exception);
 		}
 
-		((AlarmManager) this.getSystemService(Context.ALARM_SERVICE)).setInexactRepeating(AlarmManager.RTC_WAKEUP,
-				System.currentTimeMillis(), interval,
-				PendingIntent.getBroadcast(this, Util.ALARM_REQUEST_CODE,
-						new Intent(getApplicationContext(), NewMessageCheckReceiver.class),
-						PendingIntent.FLAG_UPDATE_CURRENT));
-		System.err.println("Test point 6 ...");
+		((AlarmManager) this.getSystemService(Context.ALARM_SERVICE))
+				.setInexactRepeating(AlarmManager.RTC_WAKEUP, System
+						.currentTimeMillis(), interval, PendingIntent
+						.getBroadcast(this, Util.ALARM_REQUEST_CODE,
+								new Intent(getApplicationContext(),
+										NewMessageCheckReceiver.class),
+								PendingIntent.FLAG_UPDATE_CURRENT));
 	}
 
 	/**
-	 * 
-	 * @param name
+	 * Service constructor.
 	 */
 	public NewMessageCheckService() {
+		super();
+
 		// TODO Find better way to give name of the service.
-		System.err.println("Test point 7 ...");
 	}
 
 	/**
-	 * 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public int onStartCommand(Intent intent, int flags, int id) {
-		System.err.println("Test point 8 ...");
 		/*
 		 * Check alarm.
 		 */
 		setupAlarm();
-		System.err.println("Test point 9 ...");
 
 		/*
 		 * Release wake-up lock.
@@ -110,7 +109,6 @@ public class NewMessageCheckService extends Service {
 		if (intent.getAction() == Intent.ACTION_BOOT_COMPLETED) {
 			WakefulBroadcastReceiver.completeWakefulIntent(intent);
 		}
-		System.err.println("Test point 10 ...");
 
 		/*
 		 * Check for new message.
@@ -118,33 +116,35 @@ public class NewMessageCheckService extends Service {
 		(new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground(Void... params) {
-				System.err.println("Test point 11 ...");
 				String host = "";
 				try {
-					host = getPackageManager().getApplicationInfo(NewMessageCheckService.this.getPackageName(),
-							PackageManager.GET_META_DATA).metaData.getString("host");
+					host = getPackageManager().getApplicationInfo(
+							NewMessageCheckService.this.getPackageName(),
+							PackageManager.GET_META_DATA).metaData
+							.getString("host");
 				} catch (NameNotFoundException exception) {
 					System.err.println(exception);
 					return null;
 				}
-				System.err.println("Test point 12 ...");
 
 				String script = "";
 				try {
 					script = getPackageManager().getServiceInfo(
-							new ComponentName(NewMessageCheckService.this, NewMessageCheckService.this.getClass()),
-							PackageManager.GET_SERVICES | PackageManager.GET_META_DATA).metaData.getString("script");
+							new ComponentName(NewMessageCheckService.this,
+									NewMessageCheckService.this.getClass()),
+							PackageManager.GET_SERVICES
+									| PackageManager.GET_META_DATA).metaData
+							.getString("script");
 				} catch (NameNotFoundException exception) {
 					System.err.println(exception);
 					return null;
 				}
-				System.err.println("Test point 13 ...");
 
 				SharedPreferences preference = PreferenceManager
 						.getDefaultSharedPreferences(NewMessageCheckService.this);
 
-				String instanceHash = preference.getString(Util.SHARED_PREFERENCE_INSTNCE_HASH_CODE_KEY, "");
-				System.err.println("Test point 14 ...");
+				String instanceHash = preference.getString(
+						Util.SHARED_PREFERENCE_INSTNCE_HASH_CODE_KEY, "");
 
 				if (helper == null) {
 					return null;
@@ -152,57 +152,53 @@ public class NewMessageCheckService extends Service {
 				// TODO Check in SQLite what is the last message hash and take
 				// special care when the local SQLite database is empty.
 				String lastMessageHash = helper.getLastMessageHash();
-				System.err.println(lastMessageHash);
-				System.err.println("Test point 15 ...");
 
 				HttpClient client = new DefaultHttpClient();
 				HttpPost post = new HttpPost("http://" + host + "/" + script);
-				System.err.println("Test point 16 ...");
 
 				JSONObject json = new JSONObject();
 				try {
 					json.put(Util.JSON_INSTNCE_HASH_CODE_KEY, instanceHash);
-					json.put(Util.JSON_LAST_MESSAGE_HASH_CODE_KEY, lastMessageHash);
+					json.put(Util.JSON_LAST_MESSAGE_HASH_CODE_KEY,
+							lastMessageHash);
 				} catch (JSONException exception) {
 					System.err.println(exception);
 				}
-				System.err.println("Test point 17 ...");
 
 				List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-				pairs.add(new BasicNameValuePair("new_message_check", json.toString()));
+				pairs.add(new BasicNameValuePair("new_message_check", json
+						.toString()));
 				try {
 					post.setEntity(new UrlEncodedFormEntity(pairs));
 				} catch (UnsupportedEncodingException exception) {
 					System.err.println(exception);
 				}
-				System.err.println("Test point 18 ...");
 
 				try {
 					HttpResponse response = client.execute(post);
-					System.err.println("Test point 19 ...");
 
-					JSONObject result = new JSONObject(EntityUtils.toString(response.getEntity(), "UTF-8"));
+					JSONObject result = new JSONObject(EntityUtils.toString(
+							response.getEntity(), "UTF-8"));
 
-					final String messageHash = result.getString(Util.JSON_MESSAGE_HASH_CODE_KEY);
-					final String messageRegistered = result.getString(Util.JSON_REGISTERED_KEY);
-					boolean messageFound = result.getBoolean(Util.JSON_FOUND_KEY);
-					System.err.println("Test point 20 ...");
-					System.err.println(messageFound);
-					System.err.println(messageHash);
+					final String messageHash = result
+							.getString(Util.JSON_MESSAGE_HASH_CODE_KEY);
+					final String messageRegistered = result
+							.getString(Util.JSON_REGISTERED_KEY);
+					boolean messageFound = result
+							.getBoolean(Util.JSON_FOUND_KEY);
 
 					/*
 					 * If there is a new message open message read activity (by
 					 * sending message hash as parameter).
 					 */
 					if (messageHash != "" && messageFound == true) {
-						System.err.println("Test point 21 ...");
-						Intent intent = new Intent(NewMessageCheckService.this, AnswerMessageActivity.class);
+						Intent intent = new Intent(NewMessageCheckService.this,
+								AnswerMessageActivity.class);
 						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						intent.putExtra(Util.PARENT_MESSAGE_HASH_KEY, messageHash);
+						intent.putExtra(Util.PARENT_MESSAGE_HASH_KEY,
+								messageHash);
 						intent.putExtra(Util.REGISTERED_KEY, messageRegistered);
-						System.err.println("Test point 22 ...");
 						startActivity(intent);
-						System.err.println("Test point 23 ...");
 					}
 				} catch (ClientProtocolException exception) {
 					System.err.println(exception);
@@ -211,10 +207,8 @@ public class NewMessageCheckService extends Service {
 				} catch (JSONException exception) {
 					System.err.println(exception);
 				}
-				System.err.println("Test point 24 ...");
 
 				NewMessageCheckService.this.stopSelf();
-				System.err.println("Test point 29 ...");
 				return null;
 			}
 		}).execute();
@@ -228,9 +222,7 @@ public class NewMessageCheckService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		System.err.println("Test point 25 ...");
 		helper = new MessageHistoryDatabaseHelper(this);
-		System.err.println("Test point 26 ...");
 	}
 
 	/**
@@ -238,12 +230,10 @@ public class NewMessageCheckService extends Service {
 	 */
 	@Override
 	public void onDestroy() {
-		System.err.println("Test point 27 ...");
 		if (helper != null) {
 			helper.close();
 			helper = null;
 		}
-		System.err.println("Test point 28 ...");
 		super.onDestroy();
 	}
 

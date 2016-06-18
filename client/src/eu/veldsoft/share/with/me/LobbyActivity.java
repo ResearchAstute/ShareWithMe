@@ -13,23 +13,26 @@ import android.widget.Button;
 import eu.veldsoft.share.with.me.model.Util;
 
 /**
+ * Initial application screen.
  * 
  * @author Ventsislav Medarov
  */
 public class LobbyActivity extends Activity {
-
 	/**
-	 * 
-	 * @author Ventsislav Medarov
+	 * Register hash for the device helper function.
 	 */
 	private void registerHash() {
-		String hash = Secure.getString(this.getContentResolver(), Secure.ANDROID_ID);
+		String hash = Secure.getString(this.getContentResolver(),
+				Secure.ANDROID_ID);
 		if (hash == null || hash == "") {
-			hash = Long.toHexString(UUID.randomUUID().getLeastSignificantBits());
+			hash = Long
+					.toHexString(UUID.randomUUID().getLeastSignificantBits());
 		}
 
-		SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
-		String stored = preference.getString(Util.SHARED_PREFERENCE_INSTNCE_HASH_CODE_KEY, "");
+		SharedPreferences preference = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		String stored = preference.getString(
+				Util.SHARED_PREFERENCE_INSTNCE_HASH_CODE_KEY, "");
 
 		/*
 		 * Write only once in the first start of the application.
@@ -42,8 +45,7 @@ public class LobbyActivity extends Activity {
 	}
 
 	/**
-	 * 
-	 * @author Ventsislav Medarov
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,46 +62,52 @@ public class LobbyActivity extends Activity {
 		 */
 		startService(new Intent(this, NewMessageCheckService.class));
 
-		((Button) findViewById(R.id.request)).setOnClickListener(new View.OnClickListener() {
-			/**
-			 * 
-			 */
-			@Override
-			public void onClick(View view) {
-				startActivity(new Intent(LobbyActivity.this, RequestActivity.class));
-			}
-		});
+		((Button) findViewById(R.id.request))
+				.setOnClickListener(new View.OnClickListener() {
+					/**
+					 * {@inheritDoc}
+					 */
+					@Override
+					public void onClick(View view) {
+						startActivity(new Intent(LobbyActivity.this,
+								RequestActivity.class));
+					}
+				});
 
-		((Button) findViewById(R.id.team)).setOnClickListener(new View.OnClickListener() {
-			/**
-			 * 
-			 */
-			@Override
-			public void onClick(View view) {
-				startActivity(new Intent(LobbyActivity.this, JoinTeamActivity.class));
-			}
-		});
+		((Button) findViewById(R.id.team))
+				.setOnClickListener(new View.OnClickListener() {
+					/**
+					 * {@inheritDoc}
+					 */
+					@Override
+					public void onClick(View view) {
+						startActivity(new Intent(LobbyActivity.this,
+								JoinTeamActivity.class));
+					}
+				});
 
-		((Button) findViewById(R.id.about)).setOnClickListener(new View.OnClickListener() {
-			/**
-			 * 
-			 * @author Ventsislav Medarov
-			 */
-			@Override
-			public void onClick(View view) {
-				startActivity(new Intent(LobbyActivity.this, AboutActivity.class));
-			}
-		});
+		((Button) findViewById(R.id.about))
+				.setOnClickListener(new View.OnClickListener() {
+					/**
+					 * {@inheritDoc}
+					 */
+					@Override
+					public void onClick(View view) {
+						startActivity(new Intent(LobbyActivity.this,
+								AboutActivity.class));
+					}
+				});
 
-		((Button) findViewById(R.id.exit)).setOnClickListener(new View.OnClickListener() {
-			/**
-			 * 
-			 */
-			@Override
-			public void onClick(View view) {
-				LobbyActivity.this.finish();
-			}
-		});
+		((Button) findViewById(R.id.exit))
+				.setOnClickListener(new View.OnClickListener() {
+					/**
+					 * {@inheritDoc}
+					 */
+					@Override
+					public void onClick(View view) {
+						LobbyActivity.this.finish();
+					}
+				});
 
 	}
 }

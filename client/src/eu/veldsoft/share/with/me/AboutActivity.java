@@ -4,15 +4,13 @@ import android.app.Activity;
 import android.os.Bundle;
 
 /**
+ * About the application screen.
  * 
  * @author Ventsislav Medarov
  */
 public class AboutActivity extends Activity {
-
 	/**
-	 * 
-	 * @param savedInstanceState
-	 * @author Ventsislav Medarov
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
