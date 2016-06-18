@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 
+-- Generation Time:
 -- Версия на сървъра: 10.1.10-MariaDB
 -- PHP Version: 5.6.19
 
@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `consultants` (
   `id` int(8) NOT NULL,
-  `registered` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `registered` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `instance_hash` char(64) NOT NULL DEFAULT '',
   `names` varchar(30) NOT NULL DEFAULT '',
   `email` varchar(25) NOT NULL DEFAULT '',

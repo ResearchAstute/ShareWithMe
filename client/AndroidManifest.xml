@@ -22,7 +22,7 @@
         <!-- TODO Add settings dialog with host option. -->
         <meta-data
             android:name="host"
-            android:value="192.168.0.100" />
+            android:value="share.veldsoft.eu" />
 
         <receiver
             android:name=".NewMessageCheckReceiver"
@@ -44,7 +44,7 @@
         		<!-- TODO Add settings dialog with time out option. -->
             <meta-data
                 android:name="activation_interval"
-                android:value="60000" />
+                android:value="300000" />
             <meta-data
                 android:name="name"
                 android:value="NewMessageCheckService" />

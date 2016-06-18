@@ -18,6 +18,7 @@
     <string name="about_text">„Сподели с мен“ е мобилно приложение, реализиращо метода Делфи за групово вземане на решения. Приложението е разработено като дипломна работа от Венцислав Медаров, студент в ТУ-София, Факултет по телекомуникации, град София, 2016 година.</string>
     <string name="request_message_send">Изпратено</string>
     <string name="join_request_send">Изпратено</string>
+    <string name="title_activity_answer_message">Отговор</string>
     <string name="reject_replay_label">Пропусни</string>
     <string name="replay_later_label">Не сега</string>
     <string name="send_replay_label">Изпрати отговор</string>
