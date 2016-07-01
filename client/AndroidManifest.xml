@@ -19,6 +19,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
         <!-- TODO Add settings dialog with host option. -->
         <meta-data
             android:name="host"
@@ -41,7 +42,8 @@
         <service
             android:name=".NewMessageCheckService"
             android:exported="false" >
-        		<!-- TODO Add settings dialog with time out option. -->
+
+            <!-- TODO Add settings dialog with time out option. -->
             <meta-data
                 android:name="activation_interval"
                 android:value="300000" />
@@ -80,7 +82,10 @@
                 android:name="script"
                 android:value="join.php" />
         </activity>
+
+        <!-- This activity should not start more than once simultaneously. -->
         <activity
+            android:launchMode="singleInstance"
             android:name=".AnswerMessageActivity"
             android:label="@string/title_activity_answer_message" >
             <meta-data

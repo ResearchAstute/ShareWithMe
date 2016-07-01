@@ -25,8 +25,7 @@ public class LobbyActivity extends Activity {
 		String hash = Secure.getString(this.getContentResolver(),
 				Secure.ANDROID_ID);
 		if (hash == null || hash == "") {
-			hash = Long
-					.toHexString(UUID.randomUUID().getLeastSignificantBits());
+			hash = Long.toHexString(UUID.randomUUID().getLeastSignificantBits());
 		}
 
 		SharedPreferences preference = PreferenceManager

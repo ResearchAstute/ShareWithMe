@@ -60,6 +60,16 @@ public class AnswerMessageActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_answer_message);
 
+		/*
+		 * If there is an answer screen already opened do not open a new one.
+		 */
+		// TODO This activity should not start more than once
+		// simultaneously.
+		/*
+		 * if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
+		 * != 0) { finish(); return; }
+		 */
+
 		helper = new MessageHistoryDatabaseHelper(AnswerMessageActivity.this);
 
 		/*
@@ -117,8 +127,10 @@ public class AnswerMessageActivity extends Activity {
 		new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				MessageHistoryDatabaseHelper helper = new MessageHistoryDatabaseHelper(
-						AnswerMessageActivity.this);
+				if (helper == null) {
+					return;
+				}
+
 				helper.setLastMessage(parentHash, registered);
 
 				(new AsyncTask<Void, Void, Void>() {
@@ -162,6 +174,8 @@ public class AnswerMessageActivity extends Activity {
 								.getText().toString();
 
 						HttpClient client = new DefaultHttpClient();
+						client.getParams().setParameter(
+								"http.protocol.content-charset", "UTF-8");
 						HttpPost post = new HttpPost("http://" + host + "/"
 								+ script);
 
@@ -235,6 +249,8 @@ public class AnswerMessageActivity extends Activity {
 				}
 
 				HttpClient client = new DefaultHttpClient();
+				client.getParams().setParameter(
+						"http.protocol.content-charset", "UTF-8");
 				HttpPost post = new HttpPost("http://" + host + "/" + script);
 
 				JSONObject json = new JSONObject();
@@ -258,7 +274,8 @@ public class AnswerMessageActivity extends Activity {
 					JSONObject result = new JSONObject(EntityUtils.toString(
 							response.getEntity(), "UTF-8"));
 
-					String message = result.getString(Util.JSON_MESSAGE_KEY);
+					final String message = result
+							.getString(Util.JSON_MESSAGE_KEY);
 					boolean found = result.getBoolean(Util.JSON_FOUND_KEY);
 
 					/*
@@ -266,8 +283,13 @@ public class AnswerMessageActivity extends Activity {
 					 * sending message hash as parameter).
 					 */
 					if (found == true) {
-						((EditText) findViewById(R.id.message_read))
-								.setText(message);
+						AnswerMessageActivity.this
+								.runOnUiThread(new Runnable() {
+									public void run() {
+										((EditText) findViewById(R.id.message_read))
+												.setText(message);
+									}
+								});
 					}
 				} catch (ClientProtocolException exception) {
 					System.err.println(exception);

@@ -92,6 +92,8 @@ public class RequestActivity extends Activity {
 								.getText().toString();
 
 						HttpClient client = new DefaultHttpClient();
+						client.getParams().setParameter(
+								"http.protocol.content-charset", "UTF-8");
 						HttpPost post = new HttpPost("http://" + host + "/"
 								+ script);
 

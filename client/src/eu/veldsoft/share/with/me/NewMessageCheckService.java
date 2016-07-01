@@ -116,6 +116,10 @@ public class NewMessageCheckService extends Service {
 		(new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground(Void... params) {
+				if (helper == null) {
+					return null;
+				}
+
 				String host = "";
 				try {
 					host = getPackageManager().getApplicationInfo(
@@ -146,14 +150,15 @@ public class NewMessageCheckService extends Service {
 				String instanceHash = preference.getString(
 						Util.SHARED_PREFERENCE_INSTNCE_HASH_CODE_KEY, "");
 
-				if (helper == null) {
-					return null;
-				}
-				// TODO Check in SQLite what is the last message hash and take
-				// special care when the local SQLite database is empty.
+				/*
+				 * Check in SQLite what is the last message hash and take
+				 * special care when the local SQLite database is empty.
+				 */
 				String lastMessageHash = helper.getLastMessageHash();
 
 				HttpClient client = new DefaultHttpClient();
+				client.getParams().setParameter(
+						"http.protocol.content-charset", "UTF-8");
 				HttpPost post = new HttpPost("http://" + host + "/" + script);
 
 				JSONObject json = new JSONObject();
@@ -194,7 +199,12 @@ public class NewMessageCheckService extends Service {
 					if (messageHash != "" && messageFound == true) {
 						Intent intent = new Intent(NewMessageCheckService.this,
 								AnswerMessageActivity.class);
-						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+						// TODO This activity should not start more than once
+						// simultaneously.
+						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+						/* | Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT */);
+
 						intent.putExtra(Util.PARENT_MESSAGE_HASH_KEY,
 								messageHash);
 						intent.putExtra(Util.REGISTERED_KEY, messageRegistered);
